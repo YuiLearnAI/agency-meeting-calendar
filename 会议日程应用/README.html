@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>领导会议日程 · README</title>
+<style>
+:root{
+  --bg:#ffffff; --fg:#1f2328; --muted:#59636e; --border:#d1d9e0; --soft:#f6f8fa;
+  --link:#0969da; --code-bg:#f6f8fa; --accent:#2f81f7;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0d1117; --fg:#e6edf3; --muted:#9198a1; --border:#3d444d; --soft:#151b23;
+    --link:#4493f8; --code-bg:#151b23; --accent:#4493f8; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans","PingFang SC","Microsoft YaHei",Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px 90px}
+/* 仿 GitHub 仓库头 */
+.repohead{border-bottom:1px solid var(--border);background:var(--soft);margin:0 -24px 28px;padding:18px 24px 0}
+.crumb{font-size:19px;margin-bottom:14px}
+.crumb .owner{color:var(--link)}
+.crumb .sep{color:var(--muted);margin:0 6px}
+.crumb .repo{color:var(--link);font-weight:600}
+.crumb .badge{display:inline-block;vertical-align:middle;margin-left:8px;padding:1px 7px;border:1px solid var(--border);
+  border-radius:999px;font-size:11px;color:var(--muted);font-weight:400}
+.tabs{display:flex;gap:4px;font-size:14px}
+.tab{padding:8px 12px;border-bottom:2px solid transparent;color:var(--fg);display:flex;align-items:center;gap:6px}
+.tab.on{border-bottom-color:#fd8c73;font-weight:600}
+.tab .n{background:var(--border);color:var(--fg);border-radius:999px;padding:0 6px;font-size:11px}
+.desc{padding:14px 0 18px;color:var(--muted);font-size:14px}
+/* 正文 */
+h1{font-size:2em;margin:.4em 0 .3em;padding-bottom:.3em;border-bottom:1px solid var(--border);font-weight:600;letter-spacing:-.01em}
+h2{font-size:1.45em;margin:1.8em 0 .6em;padding-bottom:.3em;border-bottom:1px solid var(--border);font-weight:600}
+h3{font-size:1.15em;margin:1.5em 0 .5em;font-weight:600}
+p{margin:.85em 0}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+hr{height:1px;background:var(--border);border:0;margin:2em 0}
+img[src*="shields.io"]{height:20px;margin-right:6px;vertical-align:middle}
+img:not([src*="shields.io"]){max-width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border);margin:14px 0}
+ul,ol{padding-left:1.8em;margin:.8em 0}
+li{margin:.32em 0}
+li::marker{color:var(--muted)}
+code{background:var(--code-bg);border-radius:6px;padding:.18em .4em;font-size:85%;
+  font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace}
+pre{background:var(--soft);border:1px solid var(--border);border-radius:8px;padding:14px 16px;overflow:auto;margin:1em 0;line-height:1.55}
+pre code{background:none;padding:0;font-size:12.5px;color:var(--fg)}
+blockquote{margin:1em 0;padding:.2em 1em;color:var(--muted);border-left:3px solid var(--border)}
+blockquote p{margin:.5em 0}
+table{border-collapse:collapse;width:100%;margin:1em 0;font-size:14.5px}
+th,td{border:1px solid var(--border);padding:7px 12px;text-align:left;vertical-align:top}
+th{background:var(--soft);font-weight:600}
+tr:nth-child(2n) td{background:color-mix(in srgb, var(--soft) 55%, transparent)}
+details{border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin:.7em 0;background:color-mix(in srgb, var(--soft) 60%, transparent)}
+details summary{cursor:pointer;font-weight:600;color:var(--link)}
+details[open] summary{margin-bottom:.5em}
+p[align="center"]{text-align:center;color:var(--muted)}
+.foot{margin-top:56px;padding-top:18px;border-top:1px solid var(--border);color:var(--muted);font-size:12.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:720px){ .wrap{padding:0 16px 60px} .repohead{margin:0 -16px 22px;padding:14px 16px 0}
+  h1{font-size:1.6em} h2{font-size:1.25em} .tabs{overflow:auto} }
+
+/* ---------- 打印 / 导出 PDF ---------- */
+@media print{
+  @page{ margin:14mm 12mm 16mm; }
+  :root{ --bg:#fff; --fg:#1f2328; --muted:#59636e; --border:#d0d7de; --soft:#f6f8fa;
+         --link:#0969da; --code-bg:#f6f8fa; --accent:#0969da; }
+  *{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  body{ font-size:10.5pt; line-height:1.6; }
+  .wrap{ max-width:none; padding:0; }
+  .repohead{ margin:0 0 16px; padding:12px 14px 10px; border:1px solid var(--border); border-radius:8px; }
+  .tabs{ display:none; }
+  .desc{ padding:6px 0 0; }
+  h1{ font-size:20pt; margin-top:0; }
+  h2{ font-size:14pt; page-break-after:avoid; page-break-inside:avoid; margin:18px 0 8px; }
+  h3{ font-size:11.5pt; page-break-after:avoid; margin:14px 0 6px; }
+  table, pre, blockquote, details, img, tr{ page-break-inside:avoid; }
+  pre{ font-size:8.5pt; }
+  code{ font-size:9pt; }
+  a{ color:#0969da; text-decoration:none; }
+  .foot{ padding-top:10px; margin-top:24px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="repohead">
+    <div class="crumb">
+      <span class="owner">ytzj</span><span class="sep">/</span><span class="repo">meeting-scheduler</span>
+      <span class="badge">Internal</span>
+    </div>
+    <div class="tabs">
+      <span class="tab on">Code</span>
+      <span class="tab">Issues <span class="n">0</span></span>
+      <span class="tab">Pull requests <span class="n">0</span></span>
+      <span class="tab">Actions</span>
+      <span class="tab">Projects</span>
+      <span class="tab">Wiki</span>
+    </div>
+    <div class="desc">把会议通知原文变成一张排好的领导周历，再一键写进金山文档 · 零依赖单文件 · 355 项测试</div>
+  </div>
+  <h1>领导会议日程 · Meeting Scheduler</h1>
+<blockquote><p>把一段会议通知原文，变成一张排得清清楚楚的领导周历，再一键写进金山文档。</p>
+<p>某市住房和城乡建设局 · 内部办公工具</p></blockquote>
+<p><img alt="零依赖" src="https://img.shields.io/badge/dependencies-0-brightgreen"> <img alt="免构建" src="https://img.shields.io/badge/build-none-blue"> <img alt="测试" src="https://img.shields.io/badge/tests-355%20passed-success"> <img alt="Node" src="https://img.shields.io/badge/node-%3E%3D18-339933?logo=node.js&logoColor=white"> <img alt="License" src="https://img.shields.io/badge/license-Internal-lightgrey"></p>
+<hr>
+<h2>这是什么</h2>
+<p>办公室每天要处理的事：<strong>收会议通知 → 判断该谁去 → 排进日程 → 填进共享表格 → 临时有人请假再改一遍</strong>。</p>
+<p>这套流程过去靠人脑 + 手工敲表，一份通知三五分钟，一周十几场会，改一次就要重排一次。</p>
+<p>这个工具把中间全部自动化：</p>
+<pre><code>通知原文  ──▶  自动拆出 日期 / 时间 / 地点 / 会议名 / 参会领导
+          ──▶  按分工判断该谁去（含 AB 角备选）
+          ──▶  排进周视图日历，撞车自动标红
+          ──▶  一键写进金山文档对应格子</code></pre>
+<p><strong>零依赖、免安装、打开即用</strong>。全部逻辑压缩在一个 <code>index.html</code> 里，双击就能跑。</p>
+<hr>
+<h2>界面一览</h2>
+<p>整个页面只有三块，常用的都在一屏之内，没有菜单层级：</p>
+<table><thead><tr><th>区域</th><th>内容</th></tr></thead><tbody><tr><td><strong>顶栏</strong></td><td><code>‹ 周切换 ›</code>、同步云文档、读回云文档、参会统计、外出培训、分工与规则、数据、主题</td></tr><tr><td><strong>左栏</strong></td><td>粘贴会议文本 → 解析并预览 → 逐条核对 → 导入到日历；底部是本周概览</td></tr><tr><td><strong>主区</strong></td><td>周一至周日七列周视图。每张卡片写着 <code>时间 · 会议名 · 参会领导</code><br>红=市政府层面，绿=局内部，灰=市直部门，紫色虚线=外出培训占位</td></tr></tbody></table>
+<p>底部还有一条<strong>下周预览</strong>，避免樊五才发现下周一撞车。</p>
+<hr>
+<h2>界面预览</h2>
+<blockquote><p>截图为演示数据：<strong>姓名、会议名称、地点均为虚构</strong>，仅用于展示界面结构。</p></blockquote>
+<h3>一周全貌</h3>
+<p>周一到周日七列，每张卡片写着时间、地点、会议名、参会领导；冲突会议标红框，外出培训用紫色虚线占位。</p>
+<p><img alt="周视图总览" src="宣传图/01-周视图总览.png"></p>
+<h3>参会统计（周 / 月切换）</h3>
+<p>顶部 <code>周 | 月</code> 一键切换，月口径自动出现翻月导航与「复制本月参会名单」。</p>
+<p><img alt="参会统计" src="宣传图/04-参会统计-周.png"></p>
+<p><img alt="参会明细悬浮层" src="宣传图/07-参会明细悬浮层.png"></p>
+<p>点某位领导，浮出他这段时间参加的每一场会：日期、星期、时段、会议名、地点，可一键复制。</p>
+<p>更多界面截图见 <code>宣传图/</code> 目录（粘贴解析、冲突明细、月度统计、外出培训登记）。</p>
+<hr>
+<h2>核心功能</h2>
+<h3>一、粘贴即解析：认得十几种日期写法</h3>
+<p>不用按格式填表，把微信里收到的通知直接粘进来就行：</p>
+<pre><code>1. 10月26日（星期一）上午9:00，在B027会议室召开局党组会议，请谷六副局长参加。
+2. 2026-10-27 14:30 市政府三楼会议室 全市住建领域安全生产工作会议 韩七
+3. 10.28 下午3点 我局五楼会议室 物业管理工作例会 杜四</code></pre>
+<p>一次解析出 <strong>日期 / 时间 / 地点 / 会议名称 / 参会领导</strong> 五个字段。</p>
+<table><thead><tr><th>写法</th><th>示例</th></tr></thead><tbody><tr><td>中文</td><td><code>10月31日</code>、<code>10月31号</code>、<code>2026年10月31日</code></td></tr><tr><td>短横 / 斜杠</td><td><code>10-31</code>、<code>10/31</code>、<code>2026-10-31</code></td></tr><tr><td>点号</td><td><code>10.31</code>、<code>2026.10.31</code>、<code>11.5日</code></td></tr><tr><td>空格</td><td><code>10 31</code>、<code>2026 10 31</code></td></tr><tr><td>星期</td><td><code>周四</code>、<code>下周三</code>、<code>星期一</code></td></tr></tbody></table>
+<p>同时<strong>主动避坑</strong>：<code>14:30</code> 不会被当日期，<code>3.5 米</code> 不会被当日期，<code>5 楼 3 号</code> 不会被当日期。 跨年自动判断，今年可省略年份。</p>
+<p><strong>一格/一行里挤了多场会也能分开</strong>。云文档里经常见到这种写法：</p>
+<pre><code>1.14:30，在市政府5楼2号会议室，参加严秘调度房地产事项会议；
+2.15:45，在市政府3楼会议室，参加扫黑除恶大会。</code></pre>
+<p>按<strong>分号</strong>或<strong>「编号 + 时间」</strong>切开，逐场各自取自己的时间、地点、会议名—— 不会出现"时间取了第一场的 14:30、名字却取了第二场"这种串场。 只有自带时间的片段才算新的一场，所以 <code>…会议；请各科室准时参加</code> 这种补充说明不会被误拆成两场。</p>
+<blockquote><p>解析结果先进<strong>预览区</strong>，逐条核对后再「导入到日历」——不做"粘进去就已经写表"这种不可逆操作。</p></blockquote>
+<h3>二、周视图日历：一眼看清谁在哪</h3>
+<ul><li>三色区分会议层级：<strong>市政府层面</strong>（红）/ <strong>局内部</strong>（绿）/ <strong>市直部门</strong>（灰）</li><li>卡片上直接写 <strong>时间 + 会议名 + 参会领导</strong>，不用点开猜</li><li>点卡片即可<strong>就地编辑</strong>，改时间、改人、改地点都在原地完成</li><li>底部附<strong>下周预览</strong>，避免樊五才想起来下周一会撞车</li></ul>
+<h3>三、冲突检测：只报数，不刷屏</h3>
+<p>同一个领导同一天两场会，间隔小于 <strong>90 分钟</strong> → 自动判定冲突。</p>
+<p>顶栏不逐条罗列，只给一行统计：</p>
+<blockquote><p>⚠ 本周 3 场会议存在时间冲突（涉及 2 位领导）　　[查看明细 ▾]</p></blockquote>
+<p>点「明细」才展开具体是哪几场。<strong>不打扰你的日常视野，但需要时随时能查。</strong></p>
+<h3>四、内置领导分工：自动推荐该谁去</h3>
+<p>工具内置了局领导班子分工表和 <strong>AB 角</strong>关系。解析完一场会，它会顺手给出参会建议：</p>
+<table><thead><tr><th>建议</th><th>说明</th></tr></thead><tbody><tr><td><strong>主参会人</strong></td><td>按分管领域匹配（如"招投标"→ 分管建筑管理口的领导）</td></tr><tr><td><strong>备选 / AB 角</strong></td><td>主参会人不在时该找谁，直接写在旁边</td></tr><tr><td><strong>理由</strong></td><td>一句话说清为什么是他，不用自己回翻分工文件</td></tr></tbody></table>
+<p>分工规则可在「⚙ 分工与规则」里随时修改，改完立即生效。</p>
+<h3>五、一键写进金山文档：不覆盖、不重复、不写错格</h3>
+<p>这是整套工具最省事的一环。</p>
+<ul><li><strong>按日期找行、按领导找列</strong>，内容<strong>追加</strong>到格子，原有登记原样保留</li><li>日期行不存在 → 自动插到正确位置并补上星期</li><li>写入前先读云上最新内容 → <strong>已登记过的自动跳过</strong>，不产生重复</li><li>同一场会<strong>地点对不上</strong> → 主动提示，让你确认而不是默默覆盖</li><li>时间比对兼容两种写法：网页的 <code>15:00</code> 能对上云文档的「下午3:00 / 下午3点 / 下午3时」 （但必须有「下午/晚上」标记才认，避免把上午9点和下午3点误判成同一场）</li><li>表里没有对应列的领导 → 明确列为「本次不写入」，不会静默丢数据</li></ul>
+<h3>六、读回 + 反同步：删了也能撤回</h3>
+<table><thead><tr><th>动作</th><th>效果</th></tr></thead><tbody><tr><td><strong>⟲ 读回云文档</strong></td><td>把云上已登记的会议拉回日历，<strong>合并</strong>处理，不重复、不删本地</td></tr><tr><td><strong>自动读回</strong></td><td>服务在线时，每次打开页面自动拉一次最新</td></tr><tr><td><strong>删除同步</strong></td><td>日历里删掉的会，同步时会提示「需同步撤下 N 处登记」，一键从云文档移除</td></tr></tbody></table>
+<p>删除是<strong>精确到段落</strong>的：只删匹配的那一条，同一格里的其他会议原样保留，整格只剩这一条时才清空。 中途失败不丢数据（先写新的，再删旧的）。</p>
+<p>反过来也做了保护：<strong>你在云文档里手工删掉的登记，同步时不会被偷偷写回去</strong>。</p>
+<ul><li>每个"我们写过的格位"都留一笔记忆（<code>date|领导</code> + 写入时刻）</li><li>下次同步时，如果云上快照比这笔记忆<strong>更新</strong>、且该格位<strong>是空的</strong> → 判定为"人工删掉了"，列进「已查不到，本次不写回」</li><li>确实要补回，点「仍然写回」才写（走 <code>ignoreExisting</code>）</li><li>快照比记忆<strong>旧</strong>时不套用这条规则——宁可照常写，也不能因为快照过期漏写</li></ul>
+<h3>七、对账模式：写之前先看清楚</h3>
+<p>除了点按钮，还有三个命令行地址，适合让工具代跑或无人值守：</p>
+<table><thead><tr><th>地址</th><th>作用</th></tr></thead><tbody><tr><td><code>?mode=preview</code></td><td><strong>预演</strong>：只比对、列出将要写入什么，不动云文档</td></tr><tr><td><code>?mode=audit</code></td><td><strong>对账</strong>：双向查漏——云上缺什么、网页缺什么、一致多少</td></tr><tr><td>默认</td><td><strong>正式同步</strong>：读回 → 比对 → 只写缺的部分</td></tr></tbody></table>
+<p>每次执行的明细都会追加写入日志，事后可以逐条核查"到底写了什么"。</p>
+<h3>八、人员状态：调出、借调、休假自动识别</h3>
+<p>共享表格里有时写的不是会议，而是 <strong>「调出」「借调」「休假」「退休」</strong> 这样的状态字。</p>
+<ul><li>这些字<strong>不会被当成一场叫"调出"的会议</strong></li><li>标记为「已调出」的领导：<strong>不再往他的列写新登记</strong>，调出生效日<strong>之后</strong>的会议<strong>不再计入</strong>统计</li><li>但<strong>调出之前</strong>他参加的会议<strong>照常计入</strong>（那时他还在本单位），排名里名字后带一个「调出」小标， 统计卡底部会写清"调出前 N 场已计入、调出后 M 场不再计入"</li><li>职务保留在名册里，不会变成"未登记职务"</li><li>判断错了，一键移出名单即恢复</li></ul>
+<h3>九、口头称呼也能认人</h3>
+<p>通知原文里很少有人写全名，多是"请崔局参加""谷局主持""贺主任汇报"。这些叫法会被落到具体人身上：</p>
+<ul><li>姓 + <code>局 / 局长</code> → 先找职务为"局长"的那位（<code>韩局</code> → 安一，而不是同姓的贺八）；同姓只有一人时直接认定（<code>崔局</code> → 崔三、<code>谷局</code> → 谷六）</li><li>姓 + <code>主任</code> / <code>书记</code> → 按职务对（<code>贺主任</code> → 贺八、<code>周书记</code> → 安一）</li><li><strong>推荐参会领导时，称谓的优先级高于分管关键词</strong>：即使正文里有"安全生产"这类会指到别人的词，写了"崔局"就以崔局为准，预览里会标注"依据称谓「崔局」识别"</li><li>已调出的人不会被推荐，但仍可以从名册里手动选</li><li><code>我局</code> <code>市住建局</code> <code>分局</code> <code>全局</code> 这类不是称谓，不会被误认</li></ul>
+<h3>十、参会统计：周 / 月一键切换与明细悬浮层</h3>
+<p>统计卡顶部有 <code>周 | 月</code> 切换：</p>
+<ul><li><strong>周</strong>：跟随日历当前周</li><li><strong>月</strong>：出现 <code>‹ 2026年10月 ›</code> 翻月，标题自动变成「本月领导参会统计」</li><li>排名 + 明细双层展示，谁开得多一眼看出</li><li><strong>点任意一位领导，浮出明细层</strong>：逐条列出这段时间他参加的每一场会（日期 · 星期 · 时段 · 会议名 · 地点），带「复制」按钮；再点一次或按 <code>Esc</code> 收起</li><li>该领导本期有培训的，额外标紫色「训 N 天」标签</li><li>底部一键<strong>复制名单</strong>（月口径自动变成"复制本月参会名单"）</li></ul>
+<h3>十一、外出培训：日历里也要占位</h3>
+<p>领导外出培训期间，日历上必须有痕迹，否则容易被误排会。</p>
+<ul><li>登记：领导 / 起止日期 / 培训名称 / 地点</li><li>跨天培训<strong>每天占位</strong>，卡片显示「第 2/3 天」</li><li>日历上以<strong>紫色虚线卡</strong>呈现：<code>🎓 杜四 · 外出培训 · 地点</code></li><li>若这几天还给他排了会，卡片上<strong>红字警告</strong>「这天还安排了 N 场会给他」</li><li>统计页按<strong>培训天数</strong>排名，形式与参会统计完全一致</li><li>支持导出 CSV、复制名单时单列【外出培训】段</li></ul>
+<hr>
+<h2>快速开始</h2>
+<h3>方式一：只看日历、解析文字</h3>
+<p>双击 <code>index.html</code> 即可。无需安装任何东西，<strong>能解析、能看日历、能复制名单、能导出备份</strong>。</p>
+<h3>方式二：要写金山文档（推荐）</h3>
+<pre><code># Windows 下双击即可，等价于：
+node bridge/server.mjs</code></pre>
+<ol><li>双击 <code>启动同步服务.bat</code></li><li>浏览器自动打开 <code>http://127.0.0.1:7788/</code></li><li>点右上角「⬆ 同步云文档」→「登录金山文档」→ 在弹出的页面点「同意」</li><li>状态变绿「● 已连金山文档」，以后点「立即同步」直接写表</li></ol>
+<p>登录凭证只保存在本机 <code>bridge/.auth.json</code>，<strong>不出现在网页、不进日志</strong>。</p>
+<blockquote><p>黑窗口关掉 = 服务停止，网页其他功能照常可用。</p></blockquote>
+<hr>
+<h2>技术说明</h2>
+<h3>架构</h3>
+<pre><code>index.html  单文件 · 约 3,700 行 / 190 KB
+  界面 + 解析器 + 日历 + 统计，数据存 localStorage
+        │
+        │ fetch（同源）
+        ▼
+bridge/server.mjs  :7788
+  静态托管 + 云文档接口
+  ├─ kdocs.mjs           金山文档连接与登录（MCP）
+  ├─ sheet-engine.mjs    读表 / 写表 / 删表引擎
+  └─ doc-snapshot.js     云文档现状快照（离线去重依据）</code></pre>
+<h3>接口</h3>
+<table><thead><tr><th>方法</th><th>路径</th><th>作用</th></tr></thead><tbody><tr><td>GET</td><td><code>/api/ping</code></td><td>健康检查，返回 <code>version</code>、<code>features</code> 能力清单与登录态</td></tr><tr><td>POST</td><td><code>/api/login/start</code></td><td>发起金山文档授权登录</td></tr><tr><td>GET</td><td><code>/api/login/status</code></td><td>轮询授权结果</td></tr><tr><td>POST</td><td><code>/api/logout</code></td><td>清除本机登录凭证</td></tr><tr><td>GET</td><td><code>/api/snapshot</code></td><td>拉取云文档当前内容</td></tr><tr><td>POST</td><td><code>/api/push</code></td><td>写入（追加，自动跳过已存在）</td></tr><tr><td>POST</td><td><code>/api/remove</code></td><td>移除指定登记（精确到段落）</td></tr><tr><td>POST</td><td><code>/api/report</code></td><td>写回同步执行明细（落 <code>.tmp/sync-log.jsonl</code>）</td></tr></tbody></table>
+<p>网页启动时先对 <code>features</code> 自检：缺 <code>remove</code> 就直接提示「服务是旧版本，点这里重启」， <strong>不会抛出看不懂的接口报错</strong>。</p>
+<h3>目录结构</h3>
+<pre><code>会议日程应用/
+├── index.html            应用本体（双击可用）
+├── README.md             本文档
+├── 使用说明.md            给同事看的操作手册
+├── _autosync.html        自动同步 / 对账页
+├── doc-snapshot.js       云文档现状快照
+├── 启动同步服务.bat       一键启动本地服务并打开页面
+├── .tmp/sync-log.jsonl   同步执行明细（自动生成）
+└── bridge/
+    ├── server.mjs        本地服务
+    ├── kdocs.mjs         金山文档客户端与登录
+    ├── sheet-engine.mjs  读表 / 写表 / 删表引擎
+    ├── parse_test.mjs    解析器测试（71 项）
+    ├── rm_ui_test.mjs    删除交互测试（42 项）
+    ├── remove_test.mjs   云端移除测试（36 项）
+    ├── inactive_test.mjs 人员状态测试（45 项）
+    ├── training_test.mjs 培训与统计测试（77 项）
+    └── .auth.json        登录凭证缓存（自动生成，请勿外传）</code></pre>
+<h3>测试</h3>
+<pre><code>cd 会议日程应用
+node bridge/parse_test.mjs       # 114 解析 / 多场会拆分 / 称谓识别 / 布局
+node bridge/rm_ui_test.mjs       # 42  删除同步的界面与兜底
+node bridge/remove_test.mjs      # 45  段落级删除引擎（含一格多场）
+node bridge/inactive_test.mjs    # 50  调出人员、统计口径、明细悬浮层
+node bridge/training_test.mjs    # 77  外出培训占位
+node bridge/sync_guard_test.mjs  # 27  云文档被删后不回写 / 旧错记录纠正
+# 合计 355 项，全部通过</code></pre>
+<p>测试覆盖真实 DOM 事件派发（jsdom）、fetch 桩、时间格式互转、段落级删除边界、 状态词误判防护、跨天培训占位等场景。</p>
+<hr>
+<h2>常见问题</h2>
+<details open><summary><b>提示「未知接口」或「删除需要新版同步服务」</b></summary><p>命令窗口里的进程跑的还是<strong>旧代码</strong>（改了 <code>bridge/*.mjs</code> 必须重启才生效）。</p>
+<p>关掉黑窗口 → 重新双击 <code>启动同步服务.bat</code> → 浏览器按 <code>Ctrl+F5</code>。 登录凭证在本地，重启不用重新登录。</p></details>
+<details open><summary><b>数据存在哪？换电脑怎么办？</b></summary><p>网页数据存在浏览器 <code>localStorage</code>。换电脑或清缓存前，点「⇅ 数据 → 导出 JSON」备份； 云文档本身是主要留档，最坏情况也能用「读回」重新拉回日历。</p></details>
+<details open><summary><b>为什么有的领导不出现在表里？</b></summary><p>共享表格的列是固定的，表里没有对应列的领导会明确列为「本次不写入」， 不会静默丢掉，也不会写错人。同理，已调出的领导不再写入。</p></details>
+<details open><summary><b>写错了能撤回吗？</b></summary><p>把日历里那条删掉，再走一次「同步云文档」→「只删除这 N 处，不写入」， 就只做删除、不碰其他内容。删除精确到段落，同格其他会议不受影响。</p></details>
+<hr>
+<h2>设计取舍</h2>
+<p>几个刻意的决定，用久了会体会到：</p>
+<ul><li><strong>预览优先</strong>：解析完不直接入库，先让你核对。因为排错会比排慢更麻烦。</li><li><strong>追加优先</strong>：写入永远是追加，不覆盖。宁可重复被跳过，也不覆盖别人刚填的内容。</li><li><strong>报数优先</strong>：冲突只报「N 场」，明细收进抽屉。日常视野必须干净。</li><li><strong>自检优先</strong>：服务版本不对就明说，不让用户对着"未知接口"猜。</li><li><strong>单文件优先</strong>：不引入框架、不搞构建。一个文件丢进 U 盘就能用，这是办公场景的硬需求。</li></ul>
+<hr>
+<p align="center"><sub>某市住房和城乡建设局 · 内部使用</sub></p>
+  <div class="foot">
+    <span>README.md · 16.4 KB · 更新于 2026/10/23</span>
+    <span>某市住房和城乡建设局 · 内部使用</span>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# commit-msg 钩子：校验提交消息格式（<gitmoji> 任务号: 简短描述）。
+# 「Jira 工作流管家」交付纪律的执行器之二（pre-commit 钩子负责脱敏门禁）。
+# 安装：git config core.hooksPath .githooks
+set -euo pipefail
+
+message_file="${1:?commit message file is required}"
+subject="$(head -n 1 "$message_file")"
+
+# 本项目无 Jira，任务号承担 Jira ID 角色，沿用 [A-Z]+-[0-9]+ 格式（如 TASK-123）
+commit_regex='^(🚀|✨|🐛|♻️|📚|🧪|💄|🔧|📦) [A-Z]+-[0-9]+: .+$'
+
+# 初始提交（无任务号的导入/初始化）放行
+if [[ "$subject" =~ ^(Initial commit|init|Init|初始化) ]]; then
+  echo "ℹ 初始提交，跳过提交消息格式校验"
+  exit 0
+fi
+
+if [[ ! "$subject" =~ $commit_regex ]]; then
+  echo "❌ 提交消息不合规：$subject" >&2
+  echo "   应使用：<gitmoji> 任务号: 简短描述（如 ✨ TASK-214: 新增导入解析）" >&2
+  exit 1
+fi
+
+echo "✅ commit-msg：提交消息格式合规"

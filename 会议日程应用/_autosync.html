@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>自动同步 · 会议日程到金山文档</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --line:#30363d; --txt:#e6edf3; --dim:#8b949e;
+    --ok:#3fb950; --warn:#d29922; --err:#f85149; --accent:#2f81f7;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);
+       font:13px/1.7 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif;padding:28px 22px}
+  h1{font-size:16px;margin:0 0 4px;font-weight:600}
+  .sub{color:var(--dim);font-size:12px;margin-bottom:18px}
+  #host{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+        padding:14px 16px;min-height:80px}
+  .line{padding:3px 0;border-bottom:1px dashed rgba(255,255,255,.04);white-space:pre-wrap;word-break:break-all}
+  .line:last-child{border-bottom:0}
+  .ok{color:var(--ok)} .warn{color:var(--warn)} .err{color:var(--err)} .acc{color:var(--accent)}
+  .dim{color:var(--dim)}
+  #done{display:none;margin-top:16px;padding:14px 16px;border-radius:10px;
+        border:1px solid rgba(63,185,80,.35);background:rgba(63,185,80,.08)}
+  #done.bad{border-color:rgba(248,81,73,.35);background:rgba(248,81,73,.08)}
+  #done b{font-size:14px}
+  .kv{color:var(--dim);font-size:12px;margin-top:6px}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<h1>正在同步到金山文档《会议安排》</h1>
+<div class="sub">本页在内嵌窗口中加载日历应用，读取网页里的会议数据，与云文档比对后写入缺的部分。请勿关闭本页。</div>
+<div id="host"></div>
+<div id="done"><b id="doneTitle"></b><div class="kv" id="doneBody"></div></div>
+
+<iframe id="app" src="/index.html"
+        style="position:fixed;left:-99999px;top:0;width:1280px;height:1000px;border:0"></iframe>
+
+<script>
+var logs = [];
+var host = document.getElementById('host');
+var PREVIEW = /[?&]mode=preview/.test(location.search);
+var AUDIT = /[?&]mode=audit/.test(location.search);
+var DELTEST = /[?&]mode=deltest/.test(location.search);
+
+function say(s, cls){
+  logs.push(s);
+  var p = document.createElement('div');
+  p.className = 'line ' + (cls || '');
+  p.textContent = s;
+  host.appendChild(p);
+}
+function finish(ok, title, detail){
+  var box = document.getElementById('done');
+  box.style.display = 'block';
+  if(!ok) box.className = 'bad';
+  document.getElementById('doneTitle').textContent = title;
+  document.getElementById('doneBody').innerHTML = detail || '';
+  document.title = (ok ? '同步完成 · ' : '同步失败 · ') + '会议日程';
+}
+function report(payload){
+  try{
+    payload.logs = logs;
+    fetch('/api/report', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+  }catch(e){}
+}
+function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+
+var frame = document.getElementById('app');
+frame.addEventListener('load', function(){
+  say('内嵌应用已加载，等待状态就绪…', 'dim');
+  setTimeout(run, 800);
+});
+
+async function waitReady(w, ms){
+  var t0 = Date.now();
+  while(Date.now() - t0 < ms){
+    if(w.state && w.state.events && w.BRIDGE && w.BRIDGE.online !== undefined && w.BRIDGE.checked) return true;
+    await sleep(200);
+  }
+  return false;
+}
+
+async function run(){
+  var w = frame.contentWindow;
+  var startAt = new Date().toISOString();
+  try{
+    if(!w || !w.state){ throw new Error('内嵌应用未初始化'); }
+
+    // 1) 等同步服务探测结果
+    await waitReady(w, 15000);
+    if(!w.BRIDGE || !w.BRIDGE.online){
+      say('首次探测未连上，正在重试…', 'warn');
+      try{ await w.probeBridge(); }catch(e){}
+      await sleep(800);
+    }
+    if(!w.BRIDGE || !w.BRIDGE.online){
+      throw new Error('本地同步服务未连上（页面连不上 127.0.0.1:7788）');
+    }
+    if(!w.BRIDGE.authed){
+      throw new Error('同步服务在线，但尚未登录金山文档');
+    }
+    say('已连上本地同步服务，金山文档登录有效', 'ok');
+
+    // 2) 先读回云文档最新内容，保证去重依据是实时的
+    say('正在读取云文档最新内容…', 'acc');
+    var pulled = await w.pullFromDoc(null, true);
+    say('读回完成：识别新增 ' + pulled.added + ' 场、更新合并 ' + pulled.merged + ' 场', 'ok');
+
+    // 3) 计算待同步
+    var pend = w.pendingEvents();
+    say('本地日历共 ' + w.state.events.length + ' 场会议，其中待同步 ' + pend.length + ' 场');
+    pend.forEach(function(e){
+      say('  · ' + e.date + ' ' + ((e.leaders || []).map(function(l){ return l.name; }).join('、') || '未指定领导') +
+          '　' + (e.title || ''), 'dim');
+    });
+
+    var plan = w.buildSyncPlan(false, false);
+    say('比对结果：应写 ' + plan.items.length + ' 处；云文档已登记 ' + plan.dups.length + ' 处；无法写入 ' + plan.skipped.length + ' 场');
+
+    if(!AUDIT && !plan.items.length){
+      if(plan.dups.length || plan.skipped.length){
+        w.markSynced([], plan.skipped.map(function(s){ return s.event; }), w.uniqueEventIds(plan.dups));
+        w.renderWeek(); w.updateSyncBadge();
+      }
+      say('云文档已是最新，无需写入。', 'ok');
+      finish(true, '无需写入 —— 云文档已是最新',
+        '比对 ' + (plan.dups.length) + ' 处已登记记录，全部一致。');
+      report({ ok:true, at:startAt, mode:'noop',
+        pending: pend.map(function(e){ return e.date + '|' + (e.leaders||[]).map(function(l){return l.name;}).join('、') + '|' + e.title; }),
+        plan: { items:0, dups:plan.dups.length, skipped:plan.skipped.length } });
+      return;
+    }
+
+    // 3) 全量对账模式：把「已同步」的也拉出来跟云上现状比，双向查漏
+    if(AUDIT){
+      var full = w.buildSyncPlan(true, false);
+      var snap = w.state.docSnapshot || { cells:{} };
+      var gaps = full.items.map(function(it){
+        return { date: it.date, leader: it.leader, text: it.text };
+      });
+      var cloudOnly = [];
+      Object.keys(snap.cells).forEach(function(k){
+        var p = k.split('|'), d = p[0], l = p[1], v = String(snap.cells[k] || '');
+        if(!v.trim()) return;
+        var hit = w.state.events.some(function(e){
+          return e.date === d && (e.leaders || []).some(function(x){ return x.name === l; });
+        });
+        if(!hit) cloudOnly.push({ date: d, leader: l, text: v.slice(0, 80) });
+      });
+
+      gaps.forEach(function(g){ say('  缺 → ' + g.date + '　' + g.leader + '　' + g.text, 'warn'); });
+      cloudOnly.forEach(function(c){ say('  多 ← ' + c.date + '　' + c.leader + '　' + c.text, 'dim'); });
+      say('对账结果：云文档缺 ' + gaps.length + ' 处；网页缺 ' + cloudOnly.length + ' 处；已一致 ' + full.dups.length + ' 处', 'ok');
+
+      finish(true, '对账完成',
+        '网页已同步但<b>云文档没有</b>：' + gaps.length + ' 处；云文档有但<b>网页没有</b>：' + cloudOnly.length +
+        ' 处；双向一致：' + full.dups.length + ' 处。');
+      report({ ok:true, at:startAt, mode:'audit',
+        localEvents: w.state.events.length,
+        gaps: gaps, cloudOnly: cloudOnly, matched: full.dups.length,
+        skipped: full.skipped.map(function(s){ return {date:s.event.date, title:s.event.title, reason:s.reason}; }) });
+      return;
+    }
+
+    // 4) 删除同步自测模式
+    if(DELTEST){
+      await runDelTest(w, startAt);
+      return;
+    }
+
+    // 5) 预演模式：只报告，不写入
+    if(PREVIEW){
+      plan.items.forEach(function(it){
+        say('  → ' + it.date + '　' + it.leader + '　' + it.text, 'acc');
+      });
+      say('预演模式：以上 ' + plan.items.length + ' 处尚未写入。', 'warn');
+      finish(true, '预演完成（未写入）', '将写入 <b>' + plan.items.length + '</b> 处，跳过已登记 <b>' +
+        plan.dups.length + '</b> 处，无法写入 <b>' + plan.skipped.length + '</b> 场。');
+      report({ ok:true, at:startAt, mode:'preview',
+        pending: pend.map(function(e){ return e.date + '|' + (e.leaders||[]).map(function(l){return l.name;}).join('、') + '|' + e.title + '|' + (e.start||''); }),
+        items: plan.items, dups: plan.dups.map(function(d){ return {date:d.date, leader:d.leader, existing:d.existing, placeDiff:d.placeDiff||null}; }),
+        skipped: plan.skipped.map(function(s){ return {date:s.event.date, title:s.event.title, reason:s.reason}; }) });
+      return;
+    }
+
+    // 5) 直连写入
+    say('正在写入云文档（先比后写，已登记的不重复写）…', 'acc');
+    var items = w.planToPushItems(plan);
+    var out = await w.pushToDoc(items, false);
+    w.applyPushResult(out, plan);
+    if(out.skipped && out.skipped.length){
+      w.markSynced([], plan.skipped.map(function(s){ return s.event; }), []);
+    }
+
+    (out.written || []).forEach(function(x){
+      say('  ✓ ' + x.date + '　' + x.leader + '　' + x.text + (x.appended ? '（追加在后）' : ''), 'ok');
+    });
+    (out.duplicates || []).forEach(function(x){
+      say('  = 已登记跳过 ' + x.date + '　' + x.leader, 'dim');
+    });
+    (out.skipped || []).forEach(function(x){
+      say('  ! 未写入 ' + x.date + '　' + x.leader + '　' + x.reason, 'warn');
+    });
+    if((out.rowsCreated || []).length){
+      say('新建日期行：' + out.rowsCreated.join('、'), 'acc');
+    }
+
+    var left = w.pendingEvents().length;
+    say('同步结束，剩余待同步 ' + left + ' 场', 'ok');
+
+    finish(true, '同步完成',
+      '写入 <b>' + (out.written || []).length + '</b> 处；跳过已登记 <b>' + (out.duplicates || []).length +
+      '</b> 处；新建日期行 <b>' + (out.rowsCreated || []).length + '</b> 个；未写入 <b>' + (out.skipped || []).length +
+      '</b> 处。<br>云文档：<a href="' + w.DOC_TARGET.url + '" target="_blank" rel="noopener">' + w.DOC_TARGET.name + '</a>');
+
+    report({ ok:true, at:startAt, mode:'push',
+      pendingCount: pend.length,
+      written: out.written || [], duplicates: out.duplicates || [],
+      skipped: out.skipped || [], rowsCreated: out.rowsCreated || [],
+      pendingAfter: left });
+  }catch(e){
+    var msg = (e && e.message) ? e.message : String(e);
+    say('失败：' + msg, 'err');
+    finish(false, '同步失败：' + msg, '可回到日历页面手动点「⬆ 同步云文档」重试。');
+    report({ ok:false, at:startAt, error: msg, code: (e && e.code) || '' });
+  }
+}
+</script>
+</body>
+</html>

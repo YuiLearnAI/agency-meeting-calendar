@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# pre-commit 钩子：提交前做「脱敏门禁」。
+# 这是「Jira 工作流管家」交付纪律的执行器之一（commit-msg 钩子负责提交消息格式）。
+# 安装：git config core.hooksPath .githooks
+set -euo pipefail
+
+# 脱敏门禁：扫描暂存区，拦截真实专名 / 密钥
+if [[ -f scripts/redact-check.mjs ]]; then
+  if ! node scripts/redact-check.mjs; then
+    echo "❌ 提交被脱敏门禁拦截（见上方明细）" >&2
+    exit 1
+  fi
+fi
+
+echo "✅ pre-commit：脱敏门禁通过"

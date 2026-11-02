@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>领导会议日程 · 使用说明</title>
+<style>
+body{margin:0;background:#f7f7f7;color:#222;font-family:-apple-system,"Segoe UI",Roboto,"Helvetica Neue","PingFang SC","Microsoft YaHei UI","Microsoft YaHei",system-ui,sans-serif;line-height:1.75;font-size:15px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:28px auto;padding:40px 44px 72px;background:#fff;border:1px solid #dddddd;border-radius:16px;box-shadow:0 6px 16px rgba(0,0,0,.08),0 0 0 1px rgba(0,0,0,.03)}
+h1{font-size:28px;font-weight:700;letter-spacing:0;padding-bottom:14px;margin:0 0 6px;border-bottom:1px solid #ebebeb}
+h1::after{content:"";display:block;width:44px;height:4px;border-radius:9999px;background:#ff385c;margin-top:14px}
+h2{font-size:21px;font-weight:600;margin:36px 0 12px;padding-bottom:8px;border-bottom:1px solid #ebebeb}
+h3{font-size:17px;font-weight:600;margin:24px 0 10px}
+h4{font-size:15px;font-weight:600;margin:16px 0 8px}
+p{margin:9px 0}
+code{background:#f7f7f7;border:1px solid #ebebeb;border-radius:6px;padding:1px 6px;font-size:13px;color:#b32505;font-family:Consolas,"Courier New",monospace}
+pre{background:#1c1c1c;color:#f2f2f2;border-radius:12px;padding:16px 18px;overflow:auto;font-size:13px;line-height:1.6}
+pre code{background:none;border:none;color:inherit;padding:0}
+table{border-collapse:separate;border-spacing:0;width:100%;margin:14px 0;font-size:14px;border:1px solid #dddddd;border-radius:12px;overflow:hidden}
+td,th{border-bottom:1px solid #ebebeb;padding:10px 13px;text-align:left;vertical-align:top}
+th{background:#f7f7f7;font-weight:600;color:#222}
+tr:last-child td{border-bottom:none}
+tr:nth-child(even) td{background:#fcfcfc}
+ul,ol{padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:14px 0;padding:12px 16px;background:#fff5f7;border:1px solid #ffd1da;color:#8a1a2b;border-radius:12px}
+blockquote p{margin:4px 0}
+hr{border:none;border-top:1px solid #ebebeb;margin:26px 0}
+.meta{color:#6a6a6a;font-size:13px;margin-bottom:24px}
+a{color:#e00b41;text-decoration:none;border-bottom:1px solid rgba(224,11,65,.35)}
+a:hover{border-bottom-color:#e00b41}
+@media(max-width:640px){.wrap{margin:0;border-radius:0;border-left:none;border-right:none;padding:24px 18px 56px}}
+</style>
+</head>
+<body><div class="wrap">
+<h1>领导会议日程 · 使用说明</h1>
+
+<blockquote>某市住房和城乡建设局 · 会议日程管理应用</blockquote>
+<p>&gt;</p>
+<blockquote>最后更新：2026-10-23</blockquote>
+
+<hr>
+
+<h2>目录</h2>
+
+<li>[这是什么](#一这是什么)</li>
+<li>[快速上手（3 步）](#二快速上手3-步)</li>
+<li>[局域网其他电脑访问](#三局域网其他电脑访问)</li>
+<li>[日常使用步骤](#四日常使用步骤)</li>
+<li>[界面与分屏使用](#五界面与分屏使用)</li>
+<li>[同步到云文档](#六同步到云文档)</li>
+<li>[参会统计与外出培训](#七参会统计与外出培训)</li>
+<li>[开机自启与启停管理](#八开机自启与启停管理)</li>
+<li>[注意事项](#九注意事项)</li>
+<li>[常见问题与解决建议](#十常见问题与解决建议)</li>
+<li>[数据备份与文件说明](#十一数据备份与文件说明)</li>
+
+<hr>
+
+<h2>一、这是什么</h2>
+
+<p>一个跑在<b>本机</b>的会议日程网页应用，把「会议通知原文」自动解析成结构化条目，落到<b>周视图日历</b>上，并<b>自动同步到金山文档《会议安排.xlsx》</b>。</p>
+
+<p>核心能力：</p>
+
+<li><b>智能解析</b>：粘贴会议通知原文，自动抽出日期、时间、地点、会议名称、参会领导、备注</li>
+<li><b>周视图日历</b>：按领导分列，一眼看清一周谁哪天有会、是否有时间冲突</li>
+<li><b>自动推荐参会领导</b>：根据领导班子分工，给出主参会人 + AB 角备选</li>
+<li><b>双向同步</b>：日历上改完自动写云文档；云文档被人改了自动读回</li>
+<li><b>参会统计</b>：按周/月统计每位领导参会场次，一键复制名单</li>
+
+<p><b>数据安全</b>：应用运行在本机，服务监听 <code>0.0.0.0:7788</code>：本机访问 <code>127.0.0.1:7788</code>，<b>同一局域网</b>内其他电脑访问 <code>http://192.168.1.100:7788</code>（需输入访问口令）。服务<b>不暴露到公网</b>（受单位路由器 NAT 隔离，外网不可达）；会议数据只有一条出站链路：本机授权的金山文档。没有任何第三方中转。</p>
+
+<hr>
+
+<h2>二、快速上手（3 步）</h2>
+
+<p><b>第 1 步：开机即用，无需手动启动。</b></p>
+
+<p>本应用已配置为<b>开机自启</b>。电脑开机登录后约 15 秒，同步服务自动在后台运行。</p>
+
+<p><b>第 2 步：打开浏览器，访问这个地址：</b></p>
+
+<pre><code>
+http://127.0.0.1:7788/
+</code></pre>
+
+<p>建议收藏到书签。</p>
+
+<p><b>第 3 步：确认右上角是「● 实时同步中」。</b></p>
+
+<li>绿点「● 实时同步中」＝ 已连上金山文档，一切正常</li>
+<li>黄点 ＝ 服务在线但尚未授权，点它 → 在弹出的页面点「同意」即可</li>
+
+<p>登录只需一次，凭证保存在本机，之后重启电脑也不用再登录。</p>
+
+<hr>
+
+<h2>三、局域网其他电脑访问</h2>
+
+<p>单位内网（同一个路由器/交换机下）的其他电脑，也能访问这台电脑上的应用，实现多人共用同一套会议日程和云文档。</p>
+
+<h3>访问方法</h3>
+
+<p>其他电脑打开浏览器，访问：</p>
+
+<pre><code>
+http://192.168.1.100:7788/
+</code></pre>
+
+<p>首次打开会先显示「<b>访问验证</b>」页，输入访问口令后即可进入。口令正确后，浏览器会自动记住（30 天免再次输入）。</p>
+
+<h3>访问口令</h3>
+
+<li>当前口令：<b>口令见本机 .access-key.txt</b></li>
+<li>口令存放在本机 <code>会议日程应用\bridge\.access-key.txt</code>，修改该文件内容即可更换口令，<b>改完需重启服务</b>（双击「恢复自启动.bat」）</li>
+<li>口令只作为「内网访问门」，防止无关人员随意打开。它不是加密，不能替代对会议内容的内部保密管理</li>
+
+<h3>重要前提（先想清楚）</h3>
+
+<table>
+<tr><td>前提</td><td>说明</td></tr>
+<tr><td>主机要常开</td><td>其他电脑访问时，<b>这台电脑必须开机</b>且同步服务在线。你下班关机，别人就用不了</td></tr>
+<tr><td>IP 要固定</td><td>当前 IP 是 <code>192.168.1.100</code>（动态分配）。若路由器重新分配 IP，地址会变，需重新告知同事新地址。<b>建议在路由器里给这台电脑绑定固定 IP</b></td></tr>
+<tr><td>谁都能改云文档</td><td>拿到口令的内网用户，都能通过这个服务读写金山文档（凭证在本机）。口令务必只给需要的人</td></tr>
+</table>
+
+<h3>本机与局域网的区别</h3>
+
+<table>
+<tr><td></td><td>本机</td><td>局域网其他电脑</td></tr>
+<tr><td>地址</td><td><code>http://127.0.0.1:7788/</code></td><td><code>http://192.168.1.100:7788/</code></td></tr>
+<tr><td>口令</td><td>本机访问也需口令</td><td>需口令</td></tr>
+<tr><td>外网</td><td>均不可达（受单位路由器隔离，不暴露公网）</td></tr>
+</table>
+
+<hr>
+
+<h2>四、日常使用步骤</h2>
+
+<h3>录入一场会议（最常用）</h3>
+
+<li>复制会议通知文字（微信、OA、Word 都行）</li>
+<li>粘贴进左侧「粘贴会议文本」输入框</li>
+<li>点 <b>「解析并预览」</b></li>
+<li>在预览卡片里<b>核对</b>日期、时间、地点、参会领导是否正确（不对就当场改）</li>
+<li>点 <b>「导入到日历」</b></li>
+
+<p>导入后约 1.5 秒，自动写进云文档。不用再点任何同步按钮。</p>
+
+<h3>支持两种文本格式</h3>
+
+<p><b>① 会议通知原文</b>（推荐，直接粘）：</p>
+
+<pre><code>
+10月26日（星期一）上午9:00，在B027会议室召开局党组会议，请谷六副局长参加。
+</code></pre>
+
+<p><b>② 一行一条</b>（简写）：</p>
+
+<pre><code>
+2026-10-26 09:00 B027 局党组会 谷六
+</code></pre>
+
+<h3>能识别的日期写法</h3>
+
+<table>
+<tr><td>写法</td><td>例子</td></tr>
+<tr><td>中文</td><td><code>10月31日</code>、<code>10月31号</code>、<code>2026年10月31日</code></td></tr>
+<tr><td>短横 / 斜杠</td><td><code>10-31</code>、<code>10/31</code>、<code>2026-10-31</code></td></tr>
+<tr><td>点号</td><td><code>10.31</code>、<code>2026.10.31</code>、<code>11.5号</code></td></tr>
+<tr><td>空格</td><td><code>10 31</code>、<code>2026 10 31</code></td></tr>
+<tr><td>星期</td><td><code>星期四</code>、<code>下周三</code></td></tr>
+</table>
+
+<p>这些<b>不会被误判成日期</b>：<code>14:30</code>（时间）、<code>3.5米</code>（小数）、<code>5楼3号</code>（楼层）。</p>
+
+<h3>修改 / 删除一场会议</h3>
+
+<li><b>改</b>：在日历上点那张会议卡片 → 弹窗里改 → 保存。新内容会自动写进云文档，旧登记同时撤下，不会出现两条。</li>
+<li><b>删</b>：卡片上删除后，云文档的删除<b>默认不自动执行</b>（删错不可撤销）。需要到「⬆ 同步云文档」里确认后才会同步删除。</li>
+
+<h3>复制报送名单</h3>
+
+<p>点右下角「📊 参会统计」悬浮卡，底部有：</p>
+<li><b>复制本周参会名单</b>：生成可直接粘贴的整周名单（未指定领导写「待定（建议：X）」）</li>
+<li><b>只复制参会领导</b>：只列人名</li>
+
+<hr>
+
+<h2>五、界面与分屏使用</h2>
+
+<h3>布局（宽屏）</h3>
+
+<pre><code>
+┌─────────────────────────────────────────────────┐
+│  顶栏：标题 · 周切换 · 同步/读回 · 更多▾          │
+├──────────────┬──────────────────────────────────┤
+│ 录入区       │  本周日历（7 列，按领导分列）       │
+│ （粘贴/解析） │  周一 … 周日，上午/下午两个时段     │
+└──────────────┴──────────────────────────────────┘
+</code></pre>
+
+<h3>分屏 / 窄窗口（窗口宽度 ≤ 1180px）</h3>
+
+<p>本应用<b>专门为分屏做了响应式适配</b>。把窗口拖窄后：</p>
+
+<li><b>录入区自动收进抽屉</b>：左侧不再常驻，日历占满整个窗口。</li>
+<li>点顶栏 <b>「＋ 录入」</b> 按钮 → 录入区从左侧滑出，录入完自动收回；点遮罩、右上角 ✕ 或按 Esc 也能收起。</li>
+<li><b>日历自动折行</b>，随窗口宽度逐级调整：</li>
+
+<table>
+<tr><td>窗口宽度</td><td>日历列数</td></tr>
+<tr><td>很宽（&gt;1280px）</td><td>7 列（一周并排）</td></tr>
+<tr><td>1280 ~ 1180px</td><td>6 列</td></tr>
+<tr><td>1180 ~ 960px</td><td>5 列</td></tr>
+<tr><td>960 ~ 720px</td><td>4 列</td></tr>
+<tr><td>720 ~ 500px</td><td>2 列</td></tr>
+<tr><td>&lt; 500px（手机）</td><td>1 列</td></tr>
+</table>
+
+<li>顶栏次要按钮（参会统计、外出培训、分工规则、数据、切换主题）收进 <b>「更多 ▾」</b> 下拉菜单，顶栏只留最常用的。</li>
+
+<blockquote>无论窗口怎么缩，日历都能完整显示、卡片文字不会被裁掉。分屏使用时，建议把窗口拉到「日历 4~5 列」的宽度，最舒服。</blockquote>
+
+<hr>
+
+<h2>六、同步到云文档</h2>
+
+<h3>实时同步（默认开启，无需操心）</h3>
+
+<table>
+<tr><td>能力</td><td>说明</td></tr>
+<tr><td>自动写入</td><td>日历新增/修改，约 1.5 秒写进云文档；已存在的自动跳过，不重复</td></tr>
+<tr><td>自动读取</td><td>每 30 秒检查云文档，有变化才读回日历，没变完全不打扰</td></tr>
+<tr><td>自动删除</td><td>日历删会议时同步删云文档：<b>默认关闭</b>，需手动确认</td></tr>
+</table>
+
+<h3>什么时候需要手动操作</h3>
+
+<li><b>云文档那边有人直接改了</b>，想立刻看到：点顶栏「⟲ 读回云文档」</li>
+<li><b>删了会议想让云文档也删</b>：点「⬆ 同步云文档」→ 在「需同步撤下」区块确认</li>
+<li><b>想完全停止自动同步</b>：点右上角「● 实时同步中」→ 关掉「开启实时同步」开关</li>
+
+<h3>云文档里删掉的会议，日历也跟着删</h3>
+
+<p>在金山文档里手工删掉一条登记后：</p>
+
+<li>日历对应卡片右上角先变成红色 <code>!</code>（提示「云文档里已删除，下次检查后移除」）</li>
+<li>下一次检查（约 30 秒）确认后，自动从日历移除</li>
+<li>记入同步面板「云文档里删掉了 N 场会」，随时可「全部恢复到日历」</li>
+
+<p><b>保护机制</b>（避免误删）：</p>
+
+<table>
+<tr><td>情况</td><td>行为</td></tr>
+<tr><td>整张表读成空的（接口异常/文档被清空）</td><td>一场都不删</td></tr>
+<tr><td>领导列被删掉或改名</td><td>判不出，不动</td></tr>
+<tr><td>从没写进云文档的本地会议</td><td>不动</td></tr>
+<tr><td>一次少了 9 场以上</td><td>先不删，列出清单等你确认</td></tr>
+<tr><td>手动点「⟲ 读回」</td><td>视为你亲自确认，一次就删</td></tr>
+</table>
+
+<hr>
+
+<h2>七、参会统计与外出培训</h2>
+
+<h3>参会统计（右下角悬浮卡）</h3>
+
+<li><b>周 / 月</b>切换：周跟随日历当前周；月可前后翻月</li>
+<li>按场次排名，点某位领导可看他的逐场明细（日期/时间/会议/地点），可复制</li>
+<li>底部一键复制本周（或本月）参会名单</li>
+
+<h3>领导外出培训（「更多 ▾ → 🎓 外出培训」）</h3>
+
+<li>登记领导、起止日期、培训名称、地点</li>
+<li>培训期间日历上显示紫色虚线占位，点它可编辑</li>
+<li>培训期间还给他排了会，卡片会红字提示冲突</li>
+<li>支持导出 CSV，复制名单时单独列【外出培训】段</li>
+
+<hr>
+
+<h2>八、开机自启与启停管理</h2>
+
+<p>同步服务已设为<b>开机自启 + 崩溃自动重启</b>，正常情况下<b>什么都不用管</b>。</p>
+
+<p>在应用文件夹（<code>会议日程应用/</code>）里，有 4 个脚本：</p>
+
+<table>
+<tr><td>脚本</td><td>作用</td><td>什么时候用</td></tr>
+<tr><td><code>查看运行状态.bat</code></td><td>看服务是否在线、计划任务状态、上次运行时间</td><td>怀疑服务没跑时</td></tr>
+<tr><td><code>停止同步服务.bat</code></td><td>停止服务 + 取消开机自启</td><td>临时不想让它跑（如系统维护）</td></tr>
+<tr><td><code>恢复自启动.bat</code></td><td>恢复开机自启 + 立即启动</td><td>停止后想恢复</td></tr>
+<tr><td><code>启动同步服务.bat</code></td><td>手动启动一次（旧方式，一般不直接用）</td><td>特殊排查时</td></tr>
+</table>
+
+<p><b>停止后如何恢复</b>：双击 <code>恢复自启动.bat</code> 即可。</p>
+
+<blockquote>注意：<code>停止同步服务.bat</code> 是<b>手动停止</b>的唯一入口。平时它自己不会停；即使进程崩溃、被杀，也会在几秒到 1 分钟内自动拉起。</blockquote>
+
+<hr>
+
+<h2>九、注意事项</h2>
+
+<li><b>页面开着才实时同步</b>。关掉网页，自动同步暂停；下次打开会自动补上（先读回、再补写），不会丢数据。</li>
+<li><b>云文档是「追加写」</b>。写错了只能手动去金山文档里删，程序不会自动覆盖。所以每次大量导入前，先核对预览。</li>
+<li><b>删会议要谨慎</b>。日历删会议 ≠ 云文档立即删，需在同步面板确认；一旦确认删除，云文档那条就没了。</li>
+<li><b>登录凭证别外传</b>。凭证在 <code>bridge/.auth.json</code>，请勿复制给别人。</li>
+<li><b>改了代码要重启服务</b>。如果（由技术人员）改了 <code>bridge/*.mjs</code>，需运行 <code>停止同步服务.bat</code> 再 <code>恢复自启动.bat</code> 让新代码生效。</li>
+<li><b>数据主要存两处</b>：浏览器 localStorage（日历）+ 金山文档（留档）。云文档是权威备份，最坏情况可用「读回」重建日历。</li>
+
+<hr>
+
+<h2>十、常见问题与解决建议</h2>
+
+<h3>Q1：打开页面显示「检测同步服务」/「同步服务未启动」</h3>
+
+<p><b>原因</b>：后台同步服务没在运行（可能被手动停过，或开机后还没起来）。</p>
+
+<p><b>解决</b>：</p>
+<li>双击 <code>查看运行状态.bat</code>，看「服务状态」是不是「离线」</li>
+<li>双击 <code>恢复自启动.bat</code>，等几秒</li>
+<li>刷新页面（Ctrl+F5）</li>
+
+<h3>Q2：页面提示「未知接口」或「旧版本，请重启」</h3>
+
+<p><b>原因</b>：后台跑的是旧代码（改了 <code>bridge/*.mjs</code> 没重启）。</p>
+
+<p><b>解决</b>：双击 <code>停止同步服务.bat</code> → 再双击 <code>恢复自启动.bat</code> → 刷新页面。</p>
+
+<h3>Q3：右上角是黄点，不是绿点</h3>
+
+<p><b>原因</b>：服务在线，但还没授权登录金山文档。</p>
+
+<p><b>解决</b>：点黄点按钮 → 在弹出页面点「同意」→ 变绿点即完成。</p>
+
+<h3>Q4：登录过期了怎么办</h3>
+
+<p><b>原因</b>：金山文档授权有有效期。</p>
+
+<p><b>解决</b>：右上角会出现「重新登录」提示，点一下重新授权即可（不用重新输账号密码，除非换了账号）。</p>
+
+<h3>Q5：解析出来的日期/时间/领导不对</h3>
+
+<p><b>原因</b>：会议原文表述有歧义（如「下午」没写具体几点、「崔局」简称）。</p>
+
+<p><b>解决</b>：<b>在预览卡片里直接改</b>再导入。不要直接导入错的。常见可纠正的：</p>
+<li>时间写了「下午」没写几点 → 预览里补上</li>
+<li>领导用简称（如「崔局」）→ 预览里选准全名</li>
+
+<h3>Q6：同一场会议在云文档里出现了两条</h3>
+
+<p><b>原因</b>：可能手写进过云文档，又从日历导了一次，且判定没认出来。</p>
+
+<p><b>解决</b>：去金山文档里手动删掉重复的那一条。程序后续会自动读回，日历侧不会因此再重复。</p>
+
+<h3>Q7：删了云文档的会议，日历里那场还带着 ☁ 或红色 <code>!</code></h3>
+
+<p><b>原因</b>：删除需要两次检查确认（默认 30 秒一次），还没到第二次。</p>
+
+<p><b>解决</b>：等 30~60 秒自动移除；或点「⟲ 读回云文档」立即处理。</p>
+
+<h3>Q8：电脑重启后服务没起来</h3>
+
+<p><b>原因</b>：极少数情况计划任务没触发。</p>
+
+<p><b>解决</b>：双击 <code>恢复自启动.bat</code>。若反复出现，双击 <code>查看运行状态.bat</code> 看「上次结果」的错误码，把截图发给我排查。</p>
+
+<h3>Q9：想彻底停用一段时间</h3>
+
+<p><b>解决</b>：双击 <code>停止同步服务.bat</code>。它会停止服务、取消开机自启。想恢复时双击 <code>恢复自启动.bat</code>。</p>
+
+<h3>Q10：换电脑 / 换浏览器后日历空了</h3>
+
+<p><b>原因</b>：日历数据存在原浏览器的 localStorage，没跟过来。</p>
+
+<p><b>解决</b>：</p>
+<li>云文档数据还在 → 新电脑打开应用，点「⟲ 读回云文档」或等自动读回，即可重建日历</li>
+<li>若之前导出过 JSON → 用「更多 ▾ → ⇅ 数据 → 导入 JSON」恢复</li>
+<li>建议平时定期「导出 JSON」备份</li>
+
+<h3>Q11：局域网其他电脑打不开 / 一直转圈</h3>
+
+<p><b>原因</b>：通常是主机未开机、服务未启动、IP 变了，或防火墙拦截。</p>
+
+<p><b>排查</b>（按顺序）：</p>
+<li><b>主机是否开机</b>、服务是否在线：在主机上双击「查看运行状态.bat」确认「服务状态：在线」</li>
+<li><b>IP 是否变了</b>：主机上运行 <code>ipconfig</code> 看当前 IPv4 地址；若不再是 <code>192.168.1.100</code>，让同事用新地址访问。<b>建议在路由器里绑定固定 IP</b>，一劳永逸</li>
+<li><b>防火墙</b>：确认主机防火墙入站规则「会议日程-局域网访问(7788)」处于「允许」状态</li>
+<li><b>是否同一局域网</b>：必须连单位的同一 WiFi/网线，手机流量热点连不进来</li>
+
+<h3>Q12：忘了访问口令 / 想改口令</h3>
+
+<p><b>改法</b>：在主机上打开 <code>会议日程应用\bridge\.access-key.txt</code>，把内容改成新口令，保存后双击「恢复自启动.bat」重启服务即生效。</p>
+
+<p><b>忘了就重新设一个</b>（口令是明文存储的，直接看该文件也能找回）。</p>
+
+<hr>
+
+<h2>十一、数据备份与文件说明</h2>
+
+<h3>备份</h3>
+
+<li><b>主要备份 = 金山文档本身</b>，会议最终都写进去了</li>
+<li><b>本地备份</b>：点「更多 ▾ → ⇅ 数据 → 导出 JSON」，下载一个 <code>.json</code> 文件存好</li>
+<li>换电脑/清缓存前，务必先导出</li>
+
+<h3>文件清单</h3>
+
+<pre><code>
+会议日程应用/
+├── index.html            应用本体（网页入口）
+├── _autosync.html        自动同步/对账页（高级用，平时不用管）
+├── doc-snapshot.js       云文档现状快照（自动刷新）
+├── 查看运行状态.bat       查看服务是否在线
+├── 停止同步服务.bat       停止服务 + 取消自启
+├── 恢复自启动.bat         恢复自启 + 立即启动
+├── 启动同步服务.bat       手动启动（旧方式，排查用）
+├── run-daemon.cmd         开机自启的入口（计划任务调用）
+├── 使用说明.md            本文档
+└── bridge/               同步服务程序（技术人员维护）
+    ├── server.mjs        本地服务
+    ├── daemon.mjs        守护进程（崩溃自动重启）
+    ├── kdocs.mjs         金山文档客户端
+    ├── sheet-engine.mjs  读写引擎
+    ├── *.ps1             停止/恢复/状态脚本
+    └── .auth.json        登录凭证（勿外传）
+</code></pre>
+
+<hr>
+
+<p>*文档由工作区维护，如有功能更新会同步修订。遇到文档没覆盖的问题，直接问即可。*</p>
+
+</div></body></html>

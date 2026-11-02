@@ -1,0 +1,51 @@
+# ===== 真实数据 / 机密文件（绝不进 Git）=====
+# 真实会议记录快照
+会议日程应用/doc-snapshot.js
+# 云文档凭证与状态
+会议日程应用/bridge/.auth.json
+会议日程应用/bridge/.sessions.json
+会议日程应用/bridge/.state-sheet.json
+# 访问口令
+会议日程应用/bridge/.access-key.txt
+# 文件监听状态（含真实公文文件名）
+会议日程应用/bridge/.watch-config.json
+会议日程应用/bridge/.watch-pending.json
+会议日程应用/bridge/.watch-seen.json
+# 单位原始文件
+领导分工/
+会议通知/
+
+# ===== 运行日志 / 临时 =====
+会议日程应用/logs/
+会议日程应用/.tmp/
+
+# ===== 脱敏构建/自检工具与含真实数据的测试（本机专用，不进 Git）=====
+# 这些文件内嵌真实人名、单位名、口令或本机文件路径作为「替换目标/测试夹具」，
+# 属于本机敏感侧；脱敏分发版由本机构建，公开仓库不需要这些源码。
+会议日程应用/tools/
+会议日程应用/bridge/watch_e2e.py
+会议日程应用/bridge/extract_test.mjs
+
+# ===== 依赖 / 构建产物 =====
+会议日程应用/node_modules/
+*.zip
+
+# ===== 本地截图 / 文档（含真实界面，非源码）=====
+会议日程应用/*.png
+会议日程应用/*.pdf
+会议日程应用/宣传图/
+会议日程应用/分发版/
+
+# ===== 系统 / 编辑器 =====
+.DS_Store
+Thumbs.db
+*.log
+
+# ===== 本地记忆与第三方设计工具（不进 Git）=====
+.workbuddy/
+.design-tools/
+
+# ===== 脱敏字典（真实词→虚拟词映射表，含完整真实名单，绝不进 Git）=====
+# 这两份是脱敏门禁的「唯一事实来源」，本机必须保留，但公开会暴露真实名单与口令。
+.redact.yaml
+scripts/redact-src.mjs
