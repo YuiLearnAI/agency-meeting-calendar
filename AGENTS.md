@@ -57,10 +57,11 @@
 
 ## 6. 提交钩子
 
-本仓库提供 `scripts/pre-commit.sh`，安装方式：
+本仓库提供 `.githooks/pre-commit` 与 `.githooks/commit-msg`，安装方式：
 
 ```bash
 git config core.hooksPath .githooks
 ```
 
-钩子会在每次提交前校验分支名、提交消息格式，并扫描敏感词与密钥（见 `scripts/redact-check.sh`）。
+- `pre-commit` 钩子：提交前扫描敏感词与密钥（见 `scripts/redact-check.mjs`）。
+- `commit-msg` 钩子：校验提交消息格式 `<gitmoji> 任务号: 描述`。
